@@ -178,11 +178,11 @@ class HBNBCommand(cmd.Cmd):
             print([allObj[k].__str__() for k in allObj])
             return
         try:
-            arg = args.split(" ")
-            if arg[0] not in HBNBCommand.classes:
+            # arg = args.split(" ")
+            if args not in HBNBCommand.classes:
                 raise NameError()
 
-            allObj = storage.all(eval(args[0]))
+            allObj = storage.all(eval(args))
             print([allObj[k].__str__() for k in allObj])
 
         except NameError:
