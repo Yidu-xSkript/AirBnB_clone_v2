@@ -10,7 +10,16 @@ from models.base_model import Base
 from models.review import Review
 from sqlalchemy.orm import relationship
 from os import getenv
+from sqlalchemy import Table
+from models.amenity import Amenity
 
+association_table = Table("place_amenity", Base.metadata,
+                        Column("place_id", String(60),
+                                ForeignKey("places.id"),
+                                primary_key=True, nullable=False),
+                        Column("amenity_id", String(60),
+                                ForeignKey("amenities.id"),
+                                primary_key=True, nullable=False))
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = "places"
@@ -25,6 +34,9 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
+    amenities = relationship("Amenity", secondary="place_amenity",
+                            viewonly=False)
+    amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
@@ -36,3 +48,19 @@ class Place(BaseModel, Base):
                 if review.place_id == self.id:
                     reviews.append(review)
             return reviews
+
+        @property
+        def amenities(self):
+            """Get a list of Amenities that are in relationship with this (place)."""
+            from models import storage
+            amenities = []
+            for amenity in list(storage.all(Amenity).values()):
+                if amenity.id in self.amenity_ids:
+                    amenities.append(amenity)
+            return amenities
+
+        @amenities.setter
+        def amenities(self, value):
+            """Set Amenity"""
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)
