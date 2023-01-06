@@ -8,6 +8,7 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from models.base_model import Base
 from models.review import Review
+from sqlalchemy.orm import relationship
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -27,7 +28,7 @@ class Place(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
         def reviews(self):
-            """Get a list of all linked Reviews."""
+            """Get a list of all Reviews that's in relationship with this (place)."""
             from models import storage
             _reviews = []
             for review in list(storage.all(Review).values()):
