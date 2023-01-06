@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+from models.base_model import BaseModel
 
 class DBStorage:
     """Database Storage as an alternative from file storage
