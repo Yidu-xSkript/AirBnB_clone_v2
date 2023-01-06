@@ -7,6 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from models.base_model import Base
+from models.review import Review
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -21,3 +22,14 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+
+    if getenv("HBNB_TYPE_STORAGE", None) != "db":
+        @property
+        def reviews(self):
+            """Get a list of all linked Reviews."""
+            from models import storage
+            _reviews = []
+            for review in list(storage.all(Review).values()):
+                if review.place_id == self.id:
+                    _reviews.append(review)
+            return _reviews
