@@ -9,6 +9,7 @@ from sqlalchemy import String
 from models.base_model import Base
 from models.review import Review
 from sqlalchemy.orm import relationship
+from os import getenv
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -30,8 +31,8 @@ class Place(BaseModel, Base):
         def reviews(self):
             """Get a list of all Reviews that's in relationship with this (place)."""
             from models import storage
-            _reviews = []
+            reviews = []
             for review in list(storage.all(Review).values()):
                 if review.place_id == self.id:
-                    _reviews.append(review)
-            return _reviews
+                    reviews.append(review)
+            return reviews
