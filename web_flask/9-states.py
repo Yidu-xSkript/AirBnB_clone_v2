@@ -19,6 +19,7 @@ def states():
     states = storage.all("State")
     return render_template("9-states.html", state=states)
 
+
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
     """show state based on <id> and list out cities."""
@@ -27,10 +28,12 @@ def states_id(id):
             return render_template("9-states.html", state=state)
     return render_template("9-states.html")
 
+
 @app.teardown_appcontext
 def teardown(exception):
     """close the db session."""
     storage.close()
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

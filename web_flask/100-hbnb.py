@@ -12,6 +12,7 @@ from flask import render_template
 
 app = Flask(__name__)
 
+
 @app.route("/hbnb", strict_slashes=False)
 def hbnb():
     """Displays an html page from AirBnB clone."""
@@ -21,10 +22,12 @@ def hbnb():
     return render_template("100-hbnb.html",
                            states=states, amenities=amenities, places=places)
 
+
 @app.teardown_appcontext
 def teardown(exception):
     """close the db session."""
     storage.close()
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
